@@ -1,43 +1,47 @@
-const initState = {
-    todos: [
-  {
-    task: "Mow the lawn",
-    id: 0,
-    completed: false
-  },
-  {
-    task: "Vacuum the floor",
-    id: 1,
-    completed: false
-  },
-  {
-    task: "Buy food",
-    id: 2,
-    completed: false
-  },
-  {
-    task: "Clean garage",
-    id: 3,
-    completed: false
-  }
-]
+import { ADD_TODO, TOGGLE_COMPLETE, DELETE_TODO } from '../actions';
+
+ const initialState = {
+  todos: [
+    {
+      id: 0,
+      value: 'Do something',
+      completed: false
+    }
+  ]
 }
 
-export const reducer = (state = initState, action) => {
-    switch (action.type) {
-        case 'ADD_TODO':
-            const newTodo = { task: action.payload, completed: false }
-            return {
-                ...state,
-                todos: [...state.todos, newTodo]
-            }
-        case 'TOGGLE_TODO':
-            return state.map(todo => 
-                (todo.id === action.id)
-                ? {...todo, completed: !todo.completed}
-                : todo)
-            default: 
-                return state
-    }
-}
+ const todoReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case ADD_TODO:
+      return {
+        ...state,
+        todos: [...state.todos, action.payload]
+      };
+    case TOGGLE_COMPLETE:
+      return {
+        ...state,
+        todos: state.todos.map(todo => {
+          const id = action.payload;
+
+           if (todo.id === id) {
+            return { ...todo, completed: !todo.completed }
+          } else {
+            return todo;
+          }
+        })
+      };
+    case DELETE_TODO:
+      return {
+        ...state,
+        todos: state.todos.filter(todo => {
+          const id = action.payload;
+          return todo.id !== id;
+        })
+      }
+    default:
+      return state;
+  }
+};
+
+ export default todoReducer;
 
